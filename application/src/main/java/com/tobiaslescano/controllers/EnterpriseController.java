@@ -1,11 +1,9 @@
 package com.tobiaslescano.controllers;
 
 import com.tobiaslescano.models.DTOs.EnterpriseDTO;
-import com.tobiaslescano.models.DTOs.ErrorDTO;
 import com.tobiaslescano.models.DTOs.requestDTOs.EnterpriseRequestDTO;
 import com.tobiaslescano.models.DTOs.responseDTOs.EnterpriseResponseDTO;
 import com.tobiaslescano.services.IEnterpriseService;
-import com.tobiaslescano.services.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

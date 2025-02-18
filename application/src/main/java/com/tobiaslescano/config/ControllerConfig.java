@@ -15,7 +15,6 @@ public class ControllerConfig {
         return new ResponseEntity<>(ErrorDTO.builder()
                 .statusCode(HttpStatus.INTERNAL_SERVER_ERROR)
                 .message(ex.getMessage())
-                .localizedMessage(ex.getLocalizedMessage())
                 .build(),
                 HttpStatus.INTERNAL_SERVER_ERROR);
     }
@@ -23,9 +22,8 @@ public class ControllerConfig {
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ErrorDTO> handleNotFoundException(Exception ex) {
         return new ResponseEntity<>(ErrorDTO.builder()
-                .statusCode(HttpStatus.INTERNAL_SERVER_ERROR)
+                .statusCode(HttpStatus.NOT_FOUND)
                 .message(ex.getMessage())
-                .localizedMessage(ex.getLocalizedMessage())
                 .build(),
                 HttpStatus.NOT_FOUND);
     }
