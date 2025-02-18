@@ -19,12 +19,12 @@ public class EnterpriseController {
     private final IEnterpriseService enterpriseService;
 
     @GetMapping("/lastMonthTransactions")
-    public ResponseEntity<List<EnterpriseResponseDTO>> getLastMonthTransactions() {
+    public ResponseEntity<List<EnterpriseDTO>> getLastMonthTransactions() {
         return new ResponseEntity<>(enterpriseService.getLastMonthTransactions(), HttpStatus.OK);
     }
 
     @GetMapping("/lastMonthAddedEnterprises")
-    public ResponseEntity<List<EnterpriseDTO>> getLastMonthAddedEnterprises() {
+    public ResponseEntity<List<EnterpriseResponseDTO>> getLastMonthAddedEnterprises() {
         return new ResponseEntity<>(enterpriseService.getLastMonthAdded(), HttpStatus.OK);
     }
 

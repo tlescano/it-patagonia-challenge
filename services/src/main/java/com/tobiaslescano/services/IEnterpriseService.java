@@ -7,9 +7,9 @@ import com.tobiaslescano.models.DTOs.responseDTOs.EnterpriseResponseDTO;
 import java.util.List;
 
 public interface IEnterpriseService {
-    List<EnterpriseResponseDTO> getLastMonthTransactions();
+    List<EnterpriseDTO> getLastMonthTransactions();
 
-    List<EnterpriseDTO> getLastMonthAdded();
+    List<EnterpriseResponseDTO> getLastMonthAdded();
 
     EnterpriseDTO createEnterprise(EnterpriseRequestDTO requestDTO);
 }

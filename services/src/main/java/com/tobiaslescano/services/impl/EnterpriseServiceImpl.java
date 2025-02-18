@@ -24,22 +24,22 @@ public class EnterpriseServiceImpl implements IEnterpriseService {
 
 
     @Override
-    public List<EnterpriseResponseDTO> getLastMonthTransactions() {
+    public List<EnterpriseDTO> getLastMonthTransactions() {
         List<Enterprise> enterprises = enterpriseRepository.findAllEnterprisesWithLastMonthTransactions();
 
         checkIfEmpty(enterprises);
 
-        return enterprises.stream().map(IEnterpriseMapper.INSTANCE::fromEntityToResponseDTO).collect(Collectors.toList());
+        return enterprises.stream().map(IEnterpriseMapper.INSTANCE::fromEntityToDTO).collect(Collectors.toList());
     }
 
     @Override
-    public List<EnterpriseDTO> getLastMonthAdded() {
+    public List<EnterpriseResponseDTO> getLastMonthAdded() {
         LocalDate date = LocalDate.now().minusMonths(1);
         List<Enterprise> enterprises = enterpriseRepository.getEnterprisesByJoinedDateGreaterThanEqual(Date.valueOf(date));
 
         checkIfEmpty(enterprises);
 
-        return enterprises.stream().map(IEnterpriseMapper.INSTANCE::fromEntityToDTO).collect(Collectors.toList());
+        return enterprises.stream().map(IEnterpriseMapper.INSTANCE::fromEntityToResponseDTO).collect(Collectors.toList());
     }
 
     @Override
