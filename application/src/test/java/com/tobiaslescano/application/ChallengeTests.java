@@ -101,8 +101,8 @@ public class ChallengeTests {
 
     @AfterAll
     public void tearDown() {
-        enterpriseRepository.deleteAll();
         transactionsRepository.deleteAll();
+        enterpriseRepository.deleteAll();
     }
 
     @Test
@@ -119,6 +119,8 @@ public class ChallengeTests {
 
         assertThat(enterprise).isNotNull();
         assertThat(enterprise.getId()).isEqualTo(enterpriseDTO.getId());
+        assertThat(enterprise.getCuit()).isEqualTo(enterpriseDTO.getCuit());
+        assertThat(enterprise.getLegalName()).isEqualTo(enterpriseDTO.getLegalName());
         assertThat(enterprise.getCuit()).isEqualTo("20-42300902-1");
         assertThat(enterprise.getLegalName()).isEqualTo("test create");
     }

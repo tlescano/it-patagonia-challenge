@@ -11,7 +11,7 @@ public class TestContainersInitializer implements
         ApplicationContextInitializer<ConfigurableApplicationContext>, AfterAllCallback {
 
     private static final PostgreSQLContainer postgreSQLContainer = new PostgreSQLContainer(
-            "postgres:14.1")
+            "postgres:15")
             .withDatabaseName("postgres")
             .withUsername("postgres")
             .withPassword("postgres");
