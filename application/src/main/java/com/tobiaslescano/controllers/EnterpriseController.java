@@ -10,9 +10,11 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -85,7 +87,7 @@ public class EnterpriseController {
                     }),
     })
     @PostMapping("/addEnterprise")
-    public ResponseEntity<EnterpriseDTO> addEnterprise(@RequestBody EnterpriseRequestDTO requestDTO) {
+    public ResponseEntity<EnterpriseDTO> addEnterprise(@Valid @RequestBody EnterpriseRequestDTO requestDTO) {
         return new ResponseEntity<>(enterpriseService.createEnterprise(requestDTO), HttpStatus.CREATED);
     }
 }
