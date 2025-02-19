@@ -14,6 +14,7 @@ public class TransactionsDTO {
     private Integer id;
     private Date created;
     private Date updated;
+    private Date transferDate;
     private Double amount;
     private String originAccount;
     private String destinationAccount;

@@ -29,7 +29,7 @@ public class Enterprise extends BaseEntity {
     @Column(name = "joined_date", nullable = false)
     private Date joinedDate;
 
-    @OneToMany(orphanRemoval = true)
-    @JoinColumn(name = "enterprise_id") //
+    @OneToMany
+    @JoinColumn(name = "enterprise_id")
     public Set<Transactions> transactions;
 }
