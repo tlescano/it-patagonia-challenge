@@ -4,21 +4,17 @@ import com.tobiaslescano.models.DTOs.EnterpriseDTO;
 import com.tobiaslescano.models.DTOs.requestDTOs.EnterpriseRequestDTO;
 import com.tobiaslescano.models.DTOs.responseDTOs.EnterpriseResponseDTO;
 import com.tobiaslescano.models.entities.Enterprise;
-import com.tobiaslescano.models.entities.Transactions;
 import com.tobiaslescano.repository.repositories.IEnterpriseRepository;
-import com.tobiaslescano.repository.repositories.ITransactionRepository;
 import com.tobiaslescano.services.IEnterpriseService;
 import com.tobiaslescano.services.exceptions.NotFoundException;
 import com.tobiaslescano.services.mappers.IEnterpriseMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import java.sql.Date;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,8 +22,6 @@ import java.util.stream.Collectors;
 public class EnterpriseServiceImpl implements IEnterpriseService {
 
     private final IEnterpriseRepository enterpriseRepository;
-
-    private final ITransactionRepository transactionRepository;
 
     @Override
     public List<EnterpriseResponseDTO> getLastMonthTransactions() {
