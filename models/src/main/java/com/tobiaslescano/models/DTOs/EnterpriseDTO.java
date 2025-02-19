@@ -4,7 +4,6 @@ import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.Date;
-import java.sql.Timestamp;
 
 @Data
 @SuperBuilder

@@ -6,7 +6,7 @@ target/
 mvnw
 mvnw.cmd
 .gitattributes
-.gitignore
+/docker
 
 ### STS ###
 .apt_generated

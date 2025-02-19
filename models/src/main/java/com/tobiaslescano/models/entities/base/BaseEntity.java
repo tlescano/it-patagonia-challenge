@@ -19,8 +19,15 @@ public class BaseEntity {
     private Integer id;
 
     @Column(name = "created", nullable = false)
-    private Timestamp created = new Timestamp(System.currentTimeMillis());
+    private Timestamp created;
 
     @Column(name = "updated")
     private Timestamp updated;
+
+    @PrePersist
+    public void prePersist() {
+        if(this.created == null) {
+            setCreated(new Timestamp(System.currentTimeMillis()));
+        }
+    }
 }

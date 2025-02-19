@@ -1,12 +1,17 @@
 package com.tobiaslescano.models.DTOs.requestDTOs;
 
+import lombok.*;
 
-import com.tobiaslescano.models.DTOs.EnterpriseDTO;
-import lombok.AllArgsConstructor;
-import lombok.experimental.SuperBuilder;
+import java.sql.Date;
 
-@SuperBuilder
+@Builder
+@Data
+@Getter
+@Setter
 @AllArgsConstructor
-public class EnterpriseRequestDTO extends EnterpriseDTO {
-
+@NoArgsConstructor
+public class EnterpriseRequestDTO {
+    private String legalName;
+    private String cuit;
+    private Date joinedDate;
 }
