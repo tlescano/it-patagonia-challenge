@@ -20,13 +20,13 @@ import java.util.Set;
 @Setter
 public class Enterprise extends BaseEntity {
 
-    @Column(name = "legal_name")
+    @Column(name = "legal_name", nullable = false)
     private String legalName;
 
-    @Column(name = "cuit")
+    @Column(name = "cuit", unique = true, nullable = false)
     private String cuit;
 
-    @Column(name = "joined_date")
+    @Column(name = "joined_date", nullable = false)
     private Date joinedDate;
 
     @OneToMany(orphanRemoval = true)
