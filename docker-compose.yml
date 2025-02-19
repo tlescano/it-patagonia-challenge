@@ -9,8 +9,8 @@ services:
     restart: always
     shm_size: 128mb
     environment:
-      POSTGRES_PASSWORD: test
+      POSTGRES_PASSWORD: challenge
       POSTGRES_DB: develop
-      POSTGRES_USER: admin
+      POSTGRES_USER: challenge
     volumes:
       - ./docker/postgres:/var/lib/postgresql/data

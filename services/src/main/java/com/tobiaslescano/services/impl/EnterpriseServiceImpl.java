@@ -22,7 +22,6 @@ public class EnterpriseServiceImpl implements IEnterpriseService {
 
     private final IEnterpriseRepository enterpriseRepository;
 
-
     @Override
     public List<EnterpriseDTO> getLastMonthTransactions() {
         List<Enterprise> enterprises = enterpriseRepository.findAllEnterprisesWithLastMonthTransactions();
