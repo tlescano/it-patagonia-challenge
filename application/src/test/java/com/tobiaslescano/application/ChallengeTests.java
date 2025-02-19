@@ -10,7 +10,6 @@ import com.tobiaslescano.models.entities.Transactions;
 import com.tobiaslescano.repository.repositories.IEnterpriseRepository;
 import com.tobiaslescano.repository.repositories.ITransactionsRepository;
 import com.tobiaslescano.services.IEnterpriseService;
-import jakarta.persistence.EntityManager;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,7 +20,6 @@ import org.springframework.test.context.ContextConfiguration;
 
 import java.sql.Date;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 
@@ -34,9 +32,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ChallengeTests {
-
-    @Autowired
-    private EntityManager entityManager;
 
     @Autowired
     private IEnterpriseRepository enterpriseRepository;
