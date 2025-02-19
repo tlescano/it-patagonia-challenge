@@ -17,4 +17,6 @@ public interface IEnterpriseRepository extends CrudRepository<Enterprise, Intege
     List<Enterprise> findAllEnterprisesWithLastMonthTransactions();
 
     List<Enterprise> getEnterprisesByJoinedDateGreaterThanEqual(Date joinedDate);
+
+    List<Enterprise> getEnterprisesByJoinedDateBetween(Date joinedDateAfter, Date joinedDateBefore);
 }

@@ -41,7 +41,7 @@ public class EnterpriseController {
             ),
     })
     @GetMapping("/lastMonthTransactions")
-    public ResponseEntity<List<EnterpriseDTO>> getLastMonthTransactions() {
+    public ResponseEntity<List<EnterpriseResponseDTO>> getLastMonthTransactions() {
         return new ResponseEntity<>(enterpriseService.getLastMonthTransactions(), HttpStatus.OK);
     }
 
@@ -50,7 +50,7 @@ public class EnterpriseController {
             @ApiResponse(responseCode = "200", description = "Enterprises found",
                     content = {
                             @Content(mediaType = "application/json",
-                                    schema = @Schema(implementation = EnterpriseDTO.class))
+                                    schema = @Schema(implementation = EnterpriseResponseDTO.class))
                     }),
             @ApiResponse(responseCode = "404", description = "Enterprises not found",
                     content = @Content(mediaType = "application/json",

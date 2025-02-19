@@ -7,7 +7,7 @@ import com.tobiaslescano.models.DTOs.responseDTOs.EnterpriseResponseDTO;
 import java.util.List;
 
 public interface IEnterpriseService {
-    List<EnterpriseDTO> getLastMonthTransactions();
+    List<EnterpriseResponseDTO> getLastMonthTransactions();
 
     List<EnterpriseResponseDTO> getLastMonthAdded();
 
