@@ -20,7 +20,7 @@ public class EnterpriseRequestDTO {
 
     @NotNull(message = "Cuit cannot be null")
     @NotBlank(message = "Cuit cannot be empty")
-    @Pattern(regexp = "^[0-9-]+$", message = "Invalid cuit")
+    @Pattern(regexp = "^\\d{2}-\\d{7,8}-\\d$", message = "Invalid cuit, format should be XX-XXXXXXX-X")
     private String cuit;
 
     @NotNull(message = "Joined date cannot be null")
