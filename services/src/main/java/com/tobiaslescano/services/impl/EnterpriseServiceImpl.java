@@ -31,7 +31,11 @@ public class EnterpriseServiceImpl implements IEnterpriseService {
         checkIfEmpty(enterprises);
 
         enterprises.forEach(enterprise -> {
-            enterprise.getTransactions().removeIf(t -> t.getCreated().before(Timestamp.valueOf(date.atStartOfDay())));
+            enterprise.getTransactions().forEach(transaction -> {
+                if (transaction.getCreated().before(Timestamp.valueOf(date.atStartOfDay()))) {
+                    enterprise.getTransactions().remove(transaction);
+                }
+            });
         });
 
         return enterprises.stream().map(IEnterpriseMapper.INSTANCE::fromEntityToResponseDTO).collect(Collectors.toList());
