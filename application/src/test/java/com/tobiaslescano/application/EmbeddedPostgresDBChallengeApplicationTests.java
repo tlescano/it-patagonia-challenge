@@ -1,15 +1,22 @@
-package com.tobiaslescano.application.repository;
+package com.tobiaslescano.application;
 
 import com.tobiaslescano.application.config.TestContainersInitializer;
+import com.tobiaslescano.models.DTOs.EnterpriseDTO;
+import com.tobiaslescano.models.DTOs.TransactionsDTO;
+import com.tobiaslescano.models.DTOs.requestDTOs.EnterpriseRequestDTO;
+import com.tobiaslescano.models.DTOs.responseDTOs.EnterpriseResponseDTO;
 import com.tobiaslescano.models.entities.Enterprise;
 import com.tobiaslescano.models.entities.Transactions;
 import com.tobiaslescano.repository.repositories.IEnterpriseRepository;
 import com.tobiaslescano.repository.repositories.ITransactionsRepository;
+import com.tobiaslescano.services.IEnterpriseService;
 import lombok.extern.slf4j.Slf4j;
-import org.assertj.core.api.AssertionsForClassTypes;
+import org.hibernate.boot.model.source.spi.JdbcDataType;
+import org.hibernate.dialect.PostgreSQLDialect;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.jdbc.JdbcConnectionDetails;
+import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection;
@@ -25,26 +32,27 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 @Slf4j
 @Testcontainers
 @DataJpaTest
 @ContextConfiguration(initializers = {TestContainersInitializer.class})
 @AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class ChallengeRepositoryTests {
+public class EmbeddedPostgresDBChallengeApplicationTests {
 
     @Autowired
     private IEnterpriseRepository enterpriseRepository;
 
     @Autowired
+    private IEnterpriseService enterpriseService;
+
+    @Autowired
     private ITransactionsRepository transactionsRepository;
 
-    private Enterprise classEnterprise;
-
-    @BeforeAll
+    @BeforeEach
     public void setUp() {
 
         Transactions transaction1 = Transactions.builder()
@@ -104,89 +112,58 @@ public class ChallengeRepositoryTests {
         transactionsRepository.saveAll(List.of(transaction1, transaction2, transaction3));
 
         enterpriseRepository.saveAll(List.of(enterpriseNoLastMonthJoined, enterprise, enterpriseNoLastMonthTransactions, enterpriseNoLastTransactions));
-
-        classEnterprise = enterprise;
-
     }
 
     @Test
-    public void EnterpriseRepository_findAll_returnsAllEnterprises() {
-        List<Enterprise> enterprises = enterpriseRepository.findAll();
-
-        AssertionsForClassTypes.assertThat(enterprises).isNotNull();
-        AssertionsForClassTypes.assertThat(enterprises.size()).isEqualTo(4);
-    }
-
-    @Test
-    public void EnterpriseRepository_findById_returnsEnterprise() {
-        Optional<Enterprise> enterprise = enterpriseRepository.findById(classEnterprise.getId());
-
-        AssertionsForClassTypes.assertThat(enterprise.isPresent()).isTrue();
-        AssertionsForClassTypes.assertThat(enterprise.get().getId()).isEqualTo(classEnterprise.getId());
-    }
-
-    @Test
-    public void EnterpriseRepository_updateEnterprise_returnEnterprise() {
-        Enterprise enterpriseToUpdate = enterpriseRepository.findById(classEnterprise.getId()).get();
-        enterpriseToUpdate.setLegalName("update");
-
-        Enterprise updatedEnterprise = enterpriseRepository.save(enterpriseToUpdate);
-
-        AssertionsForClassTypes.assertThat(updatedEnterprise).isNotNull();
-        AssertionsForClassTypes.assertThat(updatedEnterprise.getLegalName()).isEqualTo("update");
-    }
-
-    @Test
-    public void EnterpriseRepository_createEnterprise_returnEnterprise() {
-        Enterprise enterpriseToCreate = Enterprise
-                .builder()
-                .cuit("20423009022")
-                .legalName("enterprise")
+    void embeddedPostgresDB_createEnterprise() {
+        EnterpriseRequestDTO enterpriseRequestDTO = EnterpriseRequestDTO.builder()
+                .cuit("20-42300902-1")
+                .legalName("test create")
                 .joinedDate(Date.valueOf(LocalDate.now()))
-                .transactions(new HashSet<>())
                 .build();
 
-        Enterprise createdEnterprise = enterpriseRepository.save(enterpriseToCreate);
+        EnterpriseDTO enterpriseDTO = this.enterpriseService.createEnterprise(enterpriseRequestDTO);
 
-        AssertionsForClassTypes.assertThat(enterpriseToCreate).isNotNull();
-        AssertionsForClassTypes.assertThat(createdEnterprise).isNotNull();
-        AssertionsForClassTypes.assertThat(createdEnterprise).isEqualTo(enterpriseToCreate);
+        Enterprise enterprise = this.enterpriseRepository.findById(enterpriseDTO.getId()).orElse(null);
+
+        assertThat(enterprise).isNotNull();
+        assertThat(enterprise.getId()).isEqualTo(enterpriseDTO.getId());
+        assertThat(enterprise.getCuit()).isEqualTo(enterpriseDTO.getCuit());
+        assertThat(enterprise.getLegalName()).isEqualTo(enterpriseDTO.getLegalName());
+        assertThat(enterprise.getCuit()).isEqualTo("20-42300902-1");
+        assertThat(enterprise.getLegalName()).isEqualTo("test create");
     }
 
     @Test
-    public void EnterpriseRepository_findAllEnterprisesWithLastMonthTransactions_returnsAllEnterprisesWithLastMonthTransactions() {
-        List<Enterprise> enterprises = enterpriseRepository.findAllEnterprisesWithLastMonthTransactions();
-
-        AssertionsForClassTypes.assertThat(enterprises).isNotNull();
-        AssertionsForClassTypes.assertThat(enterprises.size()).isEqualTo(2);
-        for (Enterprise enterprise : enterprises) {
-            for (Transactions transactions : enterprise.getTransactions()) {
-                AssertionsForClassTypes.assertThat(transactions.getCreated()).isAfterOrEqualTo(Timestamp.valueOf(LocalDateTime.now().minusMonths(1)));
-                AssertionsForClassTypes.assertThat(transactions.getCreated()).isBeforeOrEqualTo(Timestamp.valueOf(LocalDateTime.now()));
-            }
-        }
-    }
-
-    @Test
-    public void EnterpriseRepository_getEnterprisesByJoinedDateBetween_returnsEnterprisesWithJoinedDateBetween() {
+    void embeddedPostgresDB_getLastMonthAddedEnterprises() {
         Date today = Date.valueOf(LocalDate.now());
         Date todayMinusOneMonth = Date.valueOf(LocalDate.now().minusMonths(1));
-        List<Enterprise> enterprisesLastMonthJoined = enterpriseRepository.getEnterprisesByJoinedDateBetween(todayMinusOneMonth, today);
+        List<EnterpriseResponseDTO> enterpriseResponseDTOS = enterpriseService.getLastMonthAdded();
 
-        AssertionsForClassTypes.assertThat(enterprisesLastMonthJoined).isNotNull();
-        AssertionsForClassTypes.assertThat(enterprisesLastMonthJoined.size()).isEqualTo(3);
-        for (Enterprise enterprise : enterprisesLastMonthJoined) {
-            AssertionsForClassTypes.assertThat(enterprise.getJoinedDate()).isAfterOrEqualTo(todayMinusOneMonth);
-            AssertionsForClassTypes.assertThat(enterprise.getJoinedDate()).isBeforeOrEqualTo(today);
+        for(EnterpriseResponseDTO e : enterpriseResponseDTOS) {
+            assertThat(e.getJoinedDate()).isBeforeOrEqualTo(today);
+            assertThat(e.getJoinedDate()).isAfterOrEqualTo(todayMinusOneMonth);
         }
+        assertThat(enterpriseResponseDTOS).isNotNull();
+        assertThat(enterpriseResponseDTOS).isNotEmpty();
+        assertThat(enterpriseResponseDTOS.size()).isEqualTo(3);
     }
 
     @Test
-    public void EnterpriseRepository_deleteById_returnEmptyEnterprise() {
-        enterpriseRepository.deleteById(classEnterprise.getId());
+    void embeddedPostgresDB_getLastMonthTransactionsEnterprises() {
+        Date today = new Date(System.currentTimeMillis());
+        Date todayMinusOneMonth = Date.valueOf(LocalDate.now().minusMonths(1));
+        List<Enterprise> enterprises = enterpriseRepository.findAll();
 
-        Optional<Enterprise> enterprise = enterpriseRepository.findById(classEnterprise.getId());
+        List<EnterpriseResponseDTO> responseDTOs = enterpriseService.getLastMonthTransactions();
 
-        AssertionsForClassTypes.assertThat(enterprise.isPresent()).isFalse();
+        assertThat(enterprises).isNotEmpty();
+
+        for(EnterpriseResponseDTO dto : responseDTOs) {
+            for (TransactionsDTO transactionsDTO : dto.getTransactions()) {
+                assertThat(transactionsDTO.getCreated()).isBeforeOrEqualTo(today);
+                assertThat(transactionsDTO.getCreated()).isAfterOrEqualTo(todayMinusOneMonth);
+            }
+        }
     }
 }

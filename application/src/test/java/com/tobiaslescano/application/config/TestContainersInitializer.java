@@ -7,10 +7,11 @@ import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.testcontainers.containers.PostgreSQLContainer;
 
+
 public class TestContainersInitializer implements
         ApplicationContextInitializer<ConfigurableApplicationContext>, AfterAllCallback {
 
-    private static final PostgreSQLContainer postgreSQLContainer = new PostgreSQLContainer(
+    private final PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>(
             "postgres:15")
             .withDatabaseName("postgres")
             .withUsername("postgres")
@@ -31,10 +32,9 @@ public class TestContainersInitializer implements
     }
 
     @Override
-    public void afterAll(ExtensionContext context) throws Exception {
+    public void afterAll(ExtensionContext context) {
         if (postgreSQLContainer == null) {
             return;
         }
-        postgreSQLContainer.close();
     }
 }

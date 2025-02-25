@@ -37,14 +37,11 @@ public class ChallengeServiceTests {
     @InjectMocks
     private EnterpriseServiceImpl enterpriseService;
 
-    private TransactionsDTO transactionsDTO;
     private Transactions transactions;
     private Set<Transactions> transactionsSet;
     private Enterprise enterprise;
     private Enterprise enterpriseNoLastMonthJoined;
     private Enterprise enterpriseLastMonthJoined;
-    private EnterpriseResponseDTO enterpriseResponseDTO;
-    private EnterpriseDTO enterpriseDTO;
     private EnterpriseRequestDTO requestDTO;
 
     @BeforeEach
